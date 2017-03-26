@@ -79,14 +79,14 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="form-group">
-                            <label for="BallCount">Ball Count</label>
+                            <label for="BallCount">Ball Count (betwen [{{minCount}}] and [{{maxCount}}])</label>
                             <input type="number" class="form-control" ng-model="clock.ballCount" placeholder="Email" id="BallCount">
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label for="Interval">Ingrement</label>
-                            <select class="form-control" id="Interval" ng-model="clock.interval" ng-integer>
+                            <select class="form-control" id="Interval" ng-model="clock.interval" ng-change="updateMinMaxCount()" ng-integer>
                                 <option value="5">5</option>
                                 <option value="10">10</option>
                             </select>
@@ -137,7 +137,11 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Simulation Results for {{clock.years}} years, {{clock.days}} days, {{clock.hours}} hours, and {{clock.minutes}} minutes.</h3>
-                    <h5>Total Minutes counted: {{levelArrays.tc}}</h5>
+                    <h5>Total Minutes counted: {{levelArrays.tc}}  ||  Cycle Time In Minutes: {{cycleTime + 1}}
+                        <span ng-if="!isNaN(cycleTime)">
+                            || {{result.data.RtYears}} years, {{result.data.RtDays}} Days, {{result.data.RtHours}} Hours, and {{result.data.RtMinutes}} minutes
+                        </span>
+                    </h5>
                 </div>
                 <div class="panel-body">
                     <div class="row">

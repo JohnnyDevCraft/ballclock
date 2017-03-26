@@ -37,13 +37,29 @@ func RunSimRoute(w http.ResponseWriter, r *http.Request) {
 	minutes := (simRun.Years * 365 * 24 * 60) + (((simRun.Years - (simRun.Years % 4)) / 4) * 24 * 60) + (simRun.Days * 24 * 60) + (simRun.Hours * 60) + simRun.Minutes
 
 	clock.SetupLevels(menu.StringToInt(simRun.Interval))
+	clock.RoundTime = 0
 
 	for i := 0; i < minutes; i++ {
 		//fmt.Printf("Tick [%d] of [%d]\n", i+1, minutes)
 		//fmt.Printf("Level 1 [%d] Level 2 [%d] Level 3 [%d] Queue [%d]\n", clock.Levels[0].Balls.Length(), clock.Levels[1].Balls.Length(), clock.Levels[2].Balls.Length(), clock.PickUp.Length())
 		//fmt.Printf("**************************************************************\n")
 		clock.Progress()
+		isOrig := clock.IsOrig()
+
+		if isOrig && clock.RoundTime == 0 {
+			clock.RoundTime = i
+		}
+
 		//fmt.Printf("**************************************************************\n\n\n")
+	}
+	if clock.RoundTime > 0 {
+		rt := clock.RoundTime + 1
+		clock.RtMinutes = rt % 60
+		hours := rt / 60
+		clock.RtHours = hours % 24
+		days := hours / 24
+		clock.RtDays = days % 365
+		clock.RtYears = days / 365
 	}
 	//val, _ := json.Marshal(clock)
 	//fmt.Printf("Data passed to ResponseWriter: \n%s\n\n\n", val)

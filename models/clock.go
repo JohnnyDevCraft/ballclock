@@ -4,9 +4,14 @@ import ()
 
 //Clock Object
 type Clock struct {
-	Levels []Level
-	Balls  BallStack
-	PickUp BallQueue
+	Levels    []Level
+	Balls     BallStack
+	PickUp    BallQueue
+	RoundTime int
+	RtYears int
+	RtDays int
+	RtHours int
+	RtMinutes int
 }
 
 //SetClock fastforwards throught the simulation until time matches system time.
@@ -50,6 +55,22 @@ func (c *Clock) Progress() {
 	//fmt.Printf("Ball[%d] is being moved to top level.\n", pickup.ID)
 	c.addToLevel(pickup, 0)
 
+}
+
+//IsOrig determins if the queue is in original order
+func (c *Clock) IsOrig() bool {
+
+	if c.PickUp.Length() == c.Balls.Length() {
+
+		pLen := c.PickUp.Length()
+		for i := 0; i < pLen; i++ {
+			if c.PickUp.Balls[i].ID != i+1 {
+				return false
+			}
+		}
+		return true
+	}
+	return false
 }
 
 //addToLevel adds a ball to a level

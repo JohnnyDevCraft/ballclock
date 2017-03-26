@@ -9,7 +9,7 @@
 
         $scope.runSimulation = function() {
             $scope.showContent("running");
-            $scope.clock.interval = parseInt($sope.clock.interval);
+            //$scope.clock.interval = parseInt($scope.clock.interval);
             $http.post(window.location.origin + "/RunSim/", JSON.stringify($scope.clock))
                 .then($scope.results, null);
 
@@ -24,6 +24,27 @@
             hours: 0,
             minutes: 0
         };
+
+        $scope.minCount = 0;
+        $scope.maxCount = 0;
+
+        $scope.updateMinMaxCount = function() {
+            switch($scope.clock.interval){
+                case "5":
+                    $scope.minCount = 29;
+                    $scope.maxCount = 127;
+                    break;
+                case "10":
+                    $scope.minCount = 27;
+                    $scope.maxCount = 127;
+                    break;
+                default:
+                    $scope.minCount = 29;
+                    $scope.maxCount = 127;
+                    break;
+            }
+            $scope.$apply();
+        }
 
         $scope.getNumber = function(num) {
             var array = new Array();
@@ -46,6 +67,8 @@
             return total;
         };
 
+
+
         $scope.levelArrays = {
             l1: [],
             l2: [],
@@ -59,6 +82,12 @@
             $scope.levelArrays.l1 = $scope.getNumber($scope.result.data.Levels[0].MaxBalls);
             $scope.levelArrays.l2 = $scope.getNumber($scope.result.data.Levels[1].MaxBalls);
             $scope.levelArrays.l3 = $scope.getNumber($scope.result.data.Levels[2].MaxBalls);
+            var ct = $scope.result.data.RoundTime;
+            if (ct > 0){
+                $scope.cycleTime = ct;
+            }else{
+                $scope.cycleTime = "Unreached During Simulation";
+            };
             $scope.levelArrays.tc = $scope.totalMinutesCounted();
             $scope.showContent("results");
             $scope.$apply();
