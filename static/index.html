@@ -1,0 +1,240 @@
+<html>
+
+<head>
+    <title>Ball-Clock Simulator</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" i ntegrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+
+    <script src="./scripts/jquery-1.12.4.js"></script>
+    <script type="text/javascript" src="./scripts/angular.js"></script>
+    <script type="text/javascript" src="./scripts/ngapp/app.js"></script>
+    <script type="text/javascript" src="./scripts/ngapp/controllers/bc-ctrl.js"></script>
+    <script src="scripts/jquery-1.12.4.js"></script>
+
+</head>
+
+<body ng-app="ball-clock">
+
+    <div class="container-fluid" ng-controller="bc-ctrl">
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" ng-click="about()">Ball-Clock Simulator</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li><a ng-click="about()">About This</a></li>
+                        <li><a ng-click="start()">Run Simulation</a></li>
+                    </ul>
+
+                </div>
+                <!-- /.navbar-collapse -->
+            </div>
+            <!-- /.container-fluid -->
+        </nav>
+
+
+        <div class="container" id="home">
+            <div class="well">
+                <h2 class="">Ball-Clock Simulator 1.0</h2>
+                <h3>By: Johnathon D Smith</h3>
+                <p>
+                    This ball clock simulator was designed in two days by Johnathon D Smith, as a show of skill
+                    for Ruketen.  It actually moves ball objects through a system, emulating an actual ball clock.
+                    It supports increments of five, and 10 minutes, and allows up to 90 balls to be loaded into a
+                    single simulation.
+                </p>
+                <p>
+                    Prior to this exersize Johnathon has absolutley no expierence writing code in GO.  His only
+                    exposure to go, had been through a single meet up three years prior.
+                </p>
+                <p>
+                    To learn more about what a Ball Clock actually does, watch the video below.
+                </p>
+            </div>
+
+            <!-- 16:9 aspect ratio -->
+            <div class="embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/F7K6GIBWPQw" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div class="container" id="sim1">
+            <h2>Run a Simulation</h2>
+            <form onsubmit="event.preventDefault()">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="BallCount">Ball Count</label>
+                            <input type="number" class="form-control" ng-model="clock.ballCount" placeholder="Email" id="BallCount">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="Interval">Ingrement</label>
+                            <select class="form-control" id="Interval" ng-model="clock.interval" ng-integer>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label for="Years">Years</label>
+                            <input type="number" class="form-control" ng-model="clock.years" placeholder="Years" id="Years">
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label for="Days">Days</label>
+                            <input type="number" class="form-control" ng-model="clock.days" placeholder="Days" id="Days">
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label for="Hours">Hours</label>
+                            <input type="number" class="form-control" ng-model="clock.hours" placeholder="Hours" id="Hours">
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label for="Minutes">Minutes</label>
+                            <input type="number" class="form-control" ng-model="clock.minutes" placeholder="Minutes" id="Minutes">
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <button type="submit" class="btn btn-default" ng-click="runSimulation()">Submit</button>
+            </form>
+        </div>
+
+        <div class="container" id="running">
+            <div class="well">
+                <h2>Running Simulation Now...</h2>
+            </div>
+        </div>
+
+        <div class="container" id="results">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Simulation Results for {{clock.years}} years, {{clock.days}} days, {{clock.hours}} hours, and {{clock.minutes}} minutes.</h3>
+                    <h5>Total Minutes counted: {{levelArrays.tc}}</h5>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Clock Positions</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <h3>Minutes</h3>
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>Level Position</th>
+                                            <th ng-repeat="b in levelArrays.l1">{{$index + 1}}</th>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-danger">Ball ID</td>
+                                            <td ng-repeat="b in result.data.Levels[0].Balls.Balls" class="text-danger">{{b.ID}}</td>
+                                        </tr>
+                                    </table>
+                                    <h3>Increments</h3>
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>Level Position</th>
+                                            <th ng-repeat="b in levelArrays.l2">{{($index + 1) * clock.interval}}</th>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-danger">Ball ID</td>
+                                            <td ng-repeat="b in result.data.Levels[1].Balls.Balls" class="text-danger">{{b.ID}}</td>
+                                        </tr>
+                                    </table>
+                                    <h3>Hours</h3>
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>Level Position</th>
+                                            <th ng-repeat="b in levelArrays.l3">{{$index + 1}}</th>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-danger">Ball ID</td>
+                                            <td ng-repeat="b in result.data.Levels[2].Balls.Balls" class="text-danger">{{b.ID}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Ball Statistics</h3>
+                                </div>
+                                <div class="panel-body">
+
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li role="presentation" class="active"><a href="#queue" aria-controls="queue" role="tab" data-toggle="tab">Pickup Queue</a></li>
+                                        <li role="presentation"><a href="#statistics" aria-controls="statistics" role="tab" data-toggle="tab">Statistics</a></li>
+                                    </ul>
+
+                                    <!-- Tab panes -->
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane active" id="queue">
+                                            <div ng-repeat="b in result.data.PickUp.Balls">
+                                                <h2>Ball ID : {{b.ID}}</h2>
+                                                <h4>Has been pickedup {{b.PickupCount}} times.</h4>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="statistics">
+                                            <div ng-repeat="b in result.data.Balls.Balls">
+                                                <h2>Ball ID : {{b.ID}}</h2>
+                                                <h4>Has been pickedup {{b.PickupCount}} times.</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+
+</html>

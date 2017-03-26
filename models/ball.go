@@ -7,6 +7,6 @@ type Ball struct {
 }
 
 //Pickup Increments PickupCount
-func (b Ball) Pickup() {
+func (b *Ball) Pickup() {
 	b.PickupCount++
 }
