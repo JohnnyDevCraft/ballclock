@@ -11,6 +11,7 @@ import (
 func MapAllRoutes() {
 	MapDefaultRoutes()
 	MapSimRoutes()
+
 }
 
 //MapDefaultRoutes maps the routes in this file

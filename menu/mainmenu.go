@@ -8,9 +8,19 @@ import (
 	"strings"
 )
 
+//Reader used for reading from consoled
+var Reader *bufio.Reader
+
+//InitReader initializes a reader.
+func InitReader() {
+	if Reader == nil {
+		Reader = bufio.NewReader(os.Stdin)
+	}
+}
+
 //Run starts the main menu
 func (m *App) Run(clock *models.Clock) {
-	m.Reader = bufio.NewReader(os.Stdin)
+	InitReader()
 	m.Clock = clock
 
 	ClearScreen()
@@ -28,26 +38,24 @@ func (m *App) Run(clock *models.Clock) {
 func (m *App) mainMenu() {
 	ClearScreen()
 
-	if !m.SetupComplete {
-		m.setup()
-	}
-
 	m.topMenu()
 
 }
 
-func (m *App) showError(s string) {
+//ShowError renders an error in the Console
+func ShowError(s string) {
 	ClearScreen()
-	m.renderTitle("Error with Input! ****************")
+	RenderTitle("Error with Input! ****************")
 	fmt.Println("I'm sorry, Im sure you had the best intentions, but I really need you")
 	fmt.Printf("to stick to the options presented and [%s] just isn't a valid option.  Lets\n", s)
 	fmt.Println("take another crack at it.")
 	fmt.Println()
 	fmt.Println("Press any key to continue.")
-	m.Reader.ReadByte()
+	Reader.ReadByte()
 }
 
-func (m *App) renderTitle(title string) {
+//RenderTitle is used to render the Title Section for Console.
+func RenderTitle(title string) {
 	fmt.Printf("_________________________________________________________________________________\n")
 	fmt.Printf("BallClock Simulation 1.0                                       By:Johnathon Smith\n")
 	fmt.Printf(title)
@@ -56,22 +64,25 @@ func (m *App) renderTitle(title string) {
 	fmt.Println()
 }
 
-func (m *App) getInput() string {
-	val, _ := m.Reader.ReadString('\n')
+//GetInput returns a string from the console.
+func GetInput() string {
+	val, _ := Reader.ReadString('\n')
 	val = strings.Replace(val, "\n", "", -1)
 	return val
 }
 
-func (m *App) renderLine(line int, val string) {
+//RenderLine renders a choice line in the console.
+func RenderLine(line int, val string) {
 	fmt.Printf("%d. %s\n", line, val)
 }
 
-func (m *App) getIntValue(promt string) (int, string) {
+//GetIntValue returns an in and string from stdin.
+func GetIntValue(promt string) (int, string) {
 	fmt.Println(promt)
-	val := m.getInput()
+	val := GetInput()
 	if StringIsInt(val) {
 		return StringToInt(val), val
-	} else {
-		return 0, val
 	}
+
+	return 0, val
 }

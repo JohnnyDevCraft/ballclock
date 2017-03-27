@@ -47,13 +47,13 @@ func RunSimRoute(w http.ResponseWriter, r *http.Request) {
 		isOrig := clock.IsOrig()
 
 		if isOrig && clock.RoundTime == 0 {
-			clock.RoundTime = i
+			clock.RoundTime = i + 1
 		}
 
 		//fmt.Printf("**************************************************************\n\n\n")
 	}
 	if clock.RoundTime > 0 {
-		rt := clock.RoundTime + 1
+		rt := clock.RoundTime
 		clock.RtMinutes = rt % 60
 		hours := rt / 60
 		clock.RtHours = hours % 24

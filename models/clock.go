@@ -8,15 +8,40 @@ type Clock struct {
 	Balls     BallStack
 	PickUp    BallQueue
 	RoundTime int
-	RtYears int
-	RtDays int
-	RtHours int
+	RtYears   int
+	RtDays    int
+	RtHours   int
 	RtMinutes int
 }
 
 //SetClock fastforwards throught the simulation until time matches system time.
 func (c *Clock) SetClock() {
 
+}
+
+//UpdateRoundTimes Updates RoundTimes
+func (c *Clock) UpdateRoundTimes(val int) {
+	c.RoundTime = val
+	c.RtMinutes = val % 60
+	hours := val / 60
+	c.RtHours = hours % 24
+	days := hours / 24
+	c.RtDays = days % 365
+	c.RtYears = days / 365
+}
+
+//CalRunTimes calculates run times by simulating a run
+func (c *Clock) CalRunTimes() {
+	found := false
+	count := 1
+	for !found {
+		c.Progress()
+		if c.IsOrig() {
+			c.UpdateRoundTimes(count)
+			found = true
+		}
+		count++
+	}
 }
 
 //PopulateBalls Itializes the Clock with specified Ball Count
